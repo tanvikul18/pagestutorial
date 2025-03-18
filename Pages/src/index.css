@@ -1,0 +1,109 @@
+.header{
+  display: flex;
+  padding: 4px;
+  border-bottom: 1px solid gray;
+}
+.header-logo{
+  width: 120px;
+}
+.wrapper{
+  width:960px;
+  margin:auto;
+  border:1px solid gray;
+}
+.header-title{
+  font-size:26px;
+  text-align: center;
+  margin-left: 153px;
+}
+.headerMain,.headerSub{
+  display: flex;
+}
+.headerSub{
+  padding: 5px;
+}
+.actionButtons{
+  display: flex;
+  gap:20px;
+  float: left;
+  position: relative;
+  left: 159px;
+  cursor: pointer;
+}
+.btnAbt img,.btnAu img,.btnTr img,.btnMenu img {
+  width: 12px;
+}
+.progressdiv{
+  width: 50%;
+  margin-left: 164px;
+}
+progress{
+  width:60%;
+}
+#percentText{
+display: block;
+}
+.main{
+ border-bottom: 1px solid gray;
+}
+.btnPrev img{
+  width: 12px;
+}
+.btnNext img{
+  width: 14px;
+}
+.btnPrev,.btnNext{
+  padding: 5px;
+  margin: 10px;
+  cursor: pointer;
+}
+.main{
+  min-height: 400px;
+}
+.activity{
+  padding: 5px;
+  gap: 10px;
+  display: flex;
+}
+.activity p {
+  text-align: left;
+}
+.actPgheader{
+  text-align: left;
+  padding: 5px;
+}
+.disabled{
+  opacity: 0.5;
+}
+.btnSubmit{
+  margin:5px;
+  padding: 5px;
+}
+.hidden{
+  display: none;
+}
+.active{
+  display:block;
+}
+.totalScore{
+  text-align: left;
+  padding: 10px;
+}
+.questionTxt,
+.que-header,.que-data,.feedback{
+  text-align: left;
+  padding-left: 10px;
+}
+.questionDetails .que-header h3,.questionDetails .que-data .questionTxt{
+ display: flex;
+ padding-left: 10px;
+}
+.option-group{
+  text-align:left;
+  padding:10px;
+}
+.ques-feedback{
+  text-align:left;
+  padding:10px;
+  border-top:1px solid gray;
+}
