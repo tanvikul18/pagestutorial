@@ -16,7 +16,8 @@ export default function Main() {
     const componentMap = {
         Screen: <Screen/>,
         QuestionRadio: <QuestionRadio />,
-        QuestionChecklist: <QuestionChecklist />,      
+        QuestionChecklist: <QuestionChecklist />,  
+        QuestionDnD: <QuestionDnD/>   , 
         Result: <Result/>
       
       };

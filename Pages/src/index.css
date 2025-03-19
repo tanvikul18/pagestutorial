@@ -28,10 +28,11 @@
   float: left;
   position: relative;
   left: 159px;
-  cursor: pointer;
+  
 }
 .btnAbt img,.btnAu img,.btnTr img,.btnMenu img {
   width: 12px;
+  cursor: pointer;
 }
 .progressdiv{
   width: 50%;
@@ -98,6 +99,18 @@ display: block;
  display: flex;
  padding-left: 10px;
 }
+.normal{
+  color:black
+}
+.red{
+  color:red
+}
+.blue{
+  color:blue
+}
+.green{
+  color:green
+}
 .option-group{
   text-align:left;
   padding:10px;
@@ -106,4 +119,39 @@ display: block;
   text-align:left;
   padding:10px;
   border-top:1px solid gray;
+}
+.menucontainer{
+ width: 30px;
+  
+}
+.btnMenu{
+  width: 30px;
+}
+.menulist{
+  list-style-type: none;
+  padding-left: 0px;
+  padding: 5px;
+}
+.menuitem{
+  margin:5px;
+  border-bottom: 1px solid gray;
+}
+.menudiv{
+  border:1px solid gray;
+  width: 198px;
+
+}
+.simualtion-container,.transcript-container{
+  width: 860px;
+  float: right;
+  padding-left: 40px;
+  opacity: ;
+  position: relative;
+  right: -95px;
+  padding-right: 40px;
+  text-align: justify;
+}
+  
+.simcontainer,.trncontainer,.aucontainer{
+  width: 25px;
 }

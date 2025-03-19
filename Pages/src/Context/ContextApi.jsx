@@ -9,18 +9,22 @@ export const UserContextProvider = ({ children }) => {
     const { id } = useParams(); // ✅ Get id from URL
     const[pages,setPages]=useState(NavData);
     const[isNextDisabled,setNextDisabled]=useState(false);
-    let QuesDetails={};
-    let globalQuestionDetails=[];
-    let transcriptDetails = {};
-    let globalTRanscript=[];
-    
-
-    const value = {
-       
+    const[isDisabled,setDisabled]= useState(false);
+    const[globalQuestionDetails,setglobalQuestionDetails]=useState([]);
+    const[globalTRanscript,setglobalTRanscript]=useState([])
+    const[MenuDisabled,setmenuDisabled]=useState({})
+   
+    const value = {       
         pages,
-        setPages,
-        QuesDetails,
-        globalQuestionDetails,isNextDisabled,setNextDisabled,transcriptDetails,globalTRanscript
+        setPages,        
+        globalQuestionDetails,
+        setglobalQuestionDetails,
+        isNextDisabled,
+        setNextDisabled,
+        globalTRanscript,
+        setglobalTRanscript,
+        isDisabled,
+        setDisabled,MenuDisabled,setmenuDisabled
     };
    // console.log(value.percent)
 

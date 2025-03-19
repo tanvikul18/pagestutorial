@@ -2,20 +2,25 @@ import React, { useEffect, useState } from 'react'
 import demoLogo from "/demo.jpg"
 import { useUserContext } from '../Context/ContextApi';
 import { useParams } from 'react-router-dom';
+import { _gStartPageId } from '../Data/PagesData';
+
 export default function Screen() {
-    let {pages,setPages,QuesDetails,globalQuestionDetails,isNextDisabled,setNextDisabled,transcriptDetails,globalTRanscript} = useUserContext();
+    let {pages,setPages,QuesDetails,globalQuestionDetails,isNextDisabled,setNextDisabled,globalTRanscript,setglobalTRanscript} = useUserContext();
     const[scrTxt,setscrTxt]=useState(null);
     const[scrTitle,setscrTitle]=useState(null);
     const[scrType,setscrType]=useState(null);
-    const {id} = useParams();
+    let {id} = useParams();
     const Details = Object.values(pages);
-    transcriptDetails={
-      ScrTitle : scrTitle,
-      ScrTxt : scrTxt,
-      ScrType : scrType
-    }
-    globalTRanscript.push(transcriptDetails)
-    console.log(globalTRanscript)
+    if(id == undefined || id == ''){
+          id=_gStartPageId;
+        }
+       let transcriptDetails={
+          ScrTitle : scrTitle,
+          ScrTxt : scrTxt,
+          ScrType : scrType
+        }
+       
+  console.log("globalTRanscript",globalTRanscript)
     useEffect(()=>{
       const filetredItems = Details.filter(x=>{
         return  x.PgId == id
@@ -23,8 +28,11 @@ export default function Screen() {
      setscrTxt(filetredItems[0].scrTxt);
      setscrTitle(filetredItems[0].PgTitle)
      setscrType(filetredItems[0].PgType)
+  
     },[])
-    
+    useEffect(()=>{
+        setglobalTRanscript([...globalQuestionDetails,transcriptDetails])
+    },[scrTitle,scrTxt])
   return (
     <div>
          <h2 className='actPgheader'>{scrTitle}</h2>
@@ -32,6 +40,7 @@ export default function Screen() {
             <img src={demoLogo}/>
              <p>{scrTxt}</p>
         </div>
+      
     </div>
   )
 }
