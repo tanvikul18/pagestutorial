@@ -1,67 +1,94 @@
 import React, { useState, useEffect, useSyncExternalStore } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import DragItem from "./DragItem";
-import DropZone from "./DropZone";
+import DragItem from "../Components/DragItem";
+import DropZone from "../Components/DropZone";
 import { useUserContext } from "../Context/ContextApi";
 import { useParams } from "react-router-dom";
 
+
 export default function QuestionDnD() {
+    const[dndscore,setdndsore]=useState(0);
+    const[dndfdk,setdndfdk]=useState(null);
+    const[isFdkShow,setFdkShow]=useState(false);
+    const[drop1Items,setdrop1Items]=useState([]);
+    const[drop2Items,setdrop2Items]=useState([]);
+    const[pgtitle,setpgtitle]=useState(null);
+    const[questxt,setquestxt]=useState(null);
+    let filteredItems=[];
+  
     let {
         pages,
         setPages,
         globalQuestionDetails,
+        setglobalQuestionDetails,
         isNextDisabled,
-        setNextDisabled,
-        transcriptDetails,
+        setNextDisabled,        
         globalTRanscript,
+        setglobalTRanscript,
         isDisabled,
-        setDisabled
+        setDisabled,menuArray,setmenuArray
     } = useUserContext();
     const { id } = useParams();
     const details = Object.values(pages);
-    const filteredItems = details.filter((x) => x.PgId == id);
-
+    filteredItems = details.filter((x) => x.PgId == id);
     const [droppedItems, setDroppedItems] = useState({
-        [filteredItems[0].options.dropId1]: [],
-        [filteredItems[0].options.dropId2]: []
-    });
-    const[dndscore,setdndsore]=useState(0);
-    const[dndfdk,setdndfdk]=useState(null);
-    const[isFdkShow,setFdkShow]=useState(false);
+     [filteredItems[0].options.dropId1]: [],
+     [filteredItems[0].options.dropId2]: []
+ }); 
+ const {
+    dragId1,
+    dragId2,
+    dragId3,
+    dragId4,
+    dropId1,
+    dropId2,
+    drop1CrtAsnwer,
+    drop2CrtAsnwer,
+    NoOfdragsallowed,
+    NoOfDrags,
+    NoOfDrops,
+    CrtScore,
+    IncrtScore,
+    FdkCrt,
+    FdkIncrt
+} = filteredItems[0].options;
+      useEffect(()=>{      
+    setpgtitle(filteredItems[0].PgTitle)
+    setquestxt(filteredItems[0].quesTxt)   
+    setmenuArray([...menuArray,filteredItems[0].PgTitle])
+    let transcriptDetails={
+        QuesTitle : filteredItems[0].PgTitle,
+        QuesTxt : filteredItems[0].quesTxt,
+        Droppable1: "Drop1",
+        Droppable2: "Drop2",
+        Id: id,
+        Drop1Items:[],
+        Drop2Items:[],
+        ScrType : "QuestionDnD"
+      }
+        setglobalTRanscript([...globalTRanscript,transcriptDetails])  
+          },[id])
    let count =0;
-    const {
-        dragId1,
-        dragId2,
-        dragId3,
-        dragId4,
-        dropId1,
-        dropId2,
-        drop1CrtAsnwer,
-        drop2CrtAsnwer,
-        NoOfdragsallowed,
-        NoOfDrags,
-        NoOfDrops,
-        CrtScore,
-        IncrtScore,
-        FdkCrt,
-        FdkIncrt
-    } = filteredItems[0].options;
+    
    const handleSubmit=(e)=>{
     e.preventDefault();
      if(drop1CrtAsnwer.indexOf())
     for(let i =0 ; i<drop1CrtAsnwer.length;i++){
     debugger;
         if(drop1CrtAsnwer[i] == droppedItems[filteredItems[0].options.dropId1][i].name){
-            count++;
+            count++;           
         }
+        setdrop1Items([...droppedItems[filteredItems[0].options.dropId1][i].name])
     }
     for(let j =0 ; j<drop2CrtAsnwer.length;j++){
         if(drop2CrtAsnwer[j] == droppedItems[filteredItems[0].options.dropId2][j].name){
-            count++;
+            count++;          
         }
+        setdrop2Items([...droppedItems[filteredItems[0].options.dropId1][j].name])
     }
-    console.log("count",count)
+  
+   
      if(count == 4){
         setdndfdk(FdkCrt)
         setdndsore(CrtScore)
@@ -72,10 +99,21 @@ export default function QuestionDnD() {
         setdndsore(IncrtScore)
         setFdkShow(true)
      }
+     setglobalTRanscript((prevItems) =>
+        prevItems.map((item) => {
+          if (item.ScrType === "QuestionDnD") {
+            return {
+              ...item, 
+              Drop1Items: [...(item.Drop1Items || []), droppedItems["drop1"][0].name,droppedItems["drop1"][1].name],
+              Drop2Items: [...(item.Drop2Items || []), droppedItems["drop2"][0].name,droppedItems["drop2"][1].name], 
+            };
+          }
+          return item; 
+        })
+      );
      setDisabled(true)
      setNextDisabled(false);
-    console.log("Drop1 Items",droppedItems[filteredItems[0].options.dropId1])
-    console.log("Drop2 Items",droppedItems[filteredItems[0].options.dropId2])
+   
    }
 
 
@@ -109,8 +147,9 @@ export default function QuestionDnD() {
     return (
         <div>
             <h2 style={{ textAlign: "left", paddingLeft: "10px" }}>
-                {filteredItems[0].PgTitle}
+                {pgtitle}
             </h2>
+            <p> {questxt}</p>
             <DndProvider backend={HTML5Backend}>
                 <div
                     style={{
@@ -166,7 +205,7 @@ export default function QuestionDnD() {
                                         targtesllowed={NoOfdragsallowed}
                                         
                                     />
-                                    {droppedItems[dropZoneId].map((item, index) => (
+                                    {droppedItems[dropZoneId]!== undefined &&  droppedItems[dropZoneId].map((item, index) => (
                                         <div
                                             key={index}
                                             style={{
@@ -200,6 +239,9 @@ export default function QuestionDnD() {
                    }
                 </div>
             </DndProvider>
+            <div>
+               
+            </div>
         </div>
     );
 }

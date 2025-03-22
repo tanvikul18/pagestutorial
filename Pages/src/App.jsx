@@ -15,13 +15,15 @@ function App() {
     <BrowserRouter>
     <Routes>  
 
-      <Route path="/" element={<Layout />}>        
-          <Route path="page/:id" element={<Main/>}/>       
+      <Route path="/" element={<Layout/>}>    
+         <Route path="page/:id" element={<Main/>} />
+          {/* <Route path="page/:id" element={<Main/>}/>        */}
       </Route>
        
     </Routes>
   </BrowserRouter>
-  
+
+
    
   )
 }

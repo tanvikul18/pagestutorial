@@ -98,6 +98,7 @@ display: block;
 .questionDetails .que-header h3,.questionDetails .que-data .questionTxt{
  display: flex;
  padding-left: 10px;
+ border-bottom:1px solid gray;
 }
 .normal{
   color:black
@@ -138,20 +139,52 @@ display: block;
 }
 .menudiv{
   border:1px solid gray;
-  width: 198px;
+  width: 300px;
 
 }
 .simualtion-container,.transcript-container{
   width: 860px;
   float: right;
   padding-left: 40px;
-  opacity: ;
+  
   position: relative;
   right: -95px;
   padding-right: 40px;
   text-align: justify;
 }
-  
+ .pointcontainer{
+  float: right;
+  margin-top: -40px;
+  margin-right: 21px;
+} 
 .simcontainer,.trncontainer,.aucontainer{
   width: 25px;
+}
+.btnRetry{
+  float: right;
+  margin-top: -27px;
+  margin-right: 30px;
+}
+.firstcompoenent,.secondcompoenent,.thirdcompoenent{
+  border-bottom: 1px solid gray;
+ 
+  width: 50%;
+}
+.first-header,.second-header,.third-header{display: flex;margin:10px}
+.acc-header{
+  border-bottom: 1px solid gray;
+
+}
+.btntoggle{
+  width: 50px;
+  height: 27px;
+  margin-top: 10px;
+  margin-left: 17px;
+  cursor: pointer;
+}
+.menu-item{
+border-bottom: 1px solid gray;
+text-align: left;
+padding: 5px;
+width: 280px;
 }

@@ -10,14 +10,15 @@ import { _gStartPageId } from '../Data/PagesData';
  export default function Footer() {
   let {id}=useParams();
   const navigate= useNavigate();
-   let {pages,setPages,globalQuestionDetails,isNextDisabled,setNextDisabled,transcriptDetails,globalTRanscript,isDisabled,setDisabled} = useUserContext();
+   let {pages,setPages,pageVisited,setpageVisited,isNextDisabled,setNextDisabled,isPrev,setisPrev} = useUserContext();
+   const [prevPg,setPrevPg]=useState(null);
       const [nextPg,setNextPg]=useState();
-      const [prevPg,setPrevPg]=useState();
+     
       const [quesType,setquesType]=useState();
    useEffect(()=>{
     const getPageValues = Object.values(pages);
-    if(id == undefined || id == ''){
-      id=_gStartPageId;
+    if(id == 1){
+      setNextDisabled(false)
     }
     const filetredItems = getPageValues.filter(x=>{
       return  x.PgId == id;
@@ -28,22 +29,19 @@ import { _gStartPageId } from '../Data/PagesData';
    },[id])
  
     const handleNext=(NextPgId)=>{
-      console.log("NextPgId",NextPgId)
+      setpageVisited([...pageVisited,NextPgId])
       navigate(`/page/${NextPgId}`)
     }
-    const handlePrev=(PrevPgid)=>{
-      debugger;
-     if(PrevPgid == _gStartPageId){
-      navigate('/')
-     }
-     else{
+    const handlePrev=(PrevPgid)=>{     
       navigate(`/page/${PrevPgid}`)
-     }
+      if(quesType !== "Screen"){  
+        setisPrev(true)
+      }
     }
    return (
      <div className='footer-navigation'>
       
-         <button className="btnPrev" id="btnPrevP" disabled={nextPg === null}  onClick={()=>handlePrev(prevPg)}><img src={Prevlogo}/>Prev</button>
+         <button className="btnPrev" id="btnPrevP" disabled={prevPg === null}  onClick={()=>handlePrev(prevPg)}><img src={Prevlogo}/>Prev</button>
          <button className='btnNext' disabled={isNextDisabled} id="btnNextP"  onClick={()=>handleNext(nextPg)}>Next<img src={Nextlogo}/></button>
         
      </div>

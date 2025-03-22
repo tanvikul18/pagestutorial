@@ -2,57 +2,75 @@ import React, { useEffect, useState } from 'react'
 import { useUserContext } from '../Context/ContextApi';
 import { useParams ,useNavigate} from 'react-router-dom';
 import Result from './Result';
+import QuestionChecklistform from '../Components/QuestionChecklistform';
 
 export default function QuestionChecklist() {
- let {pages,globalQuestionDetails,setglobalQuestionDetails,setNextDisabled,globalTRanscript,setglobalTRanscript,isDisabled,setDisabled} = useUserContext();
+ let {pages,globalQuestionDetails,setglobalQuestionDetails,setNextDisabled,globalTRanscript,setglobalTRanscript,isPrev,setisPrev,isDisabled,setDisabled,cfdk,setCFdk,answers,setanswers,menuArray,setmenuArray} = useUserContext();
   
   const nav = useNavigate();
   const {id} = useParams();
    const[crtCount,setcrtCount]=useState(0);
-    const[score,setScore]=useState(0);
-    const[fdk,setFdk]=useState(null);
+    const[score,setScore]=useState(0);   
+    const[maxscore,setMaxscore]=useState(0);
     const[pgTitle,setPgTitle]=useState(null);
     const[quesTxt,setquesTxt]=useState('');  
     const[shwFdk,setShwFdk]=useState(false); 
-    const[answers,setanswers]=useState([]);
-    const[options,setOptions]=useState([]);
+    
      const[ischkActive,setchkActive]=useState(true);
+     const[QuesData,setQuesData]=useState([]);
+     const[crtOptions,setCrtOptions]=useState([]);//correct asnwerchecboxes
+     const[optionsData,setoptionsData] = useState([])
    // console.log(pages)
-    const Details = Object.values(pages);
    
-    const filetredItems = Details.filter(x=>{
-      return  x.PgId == id
-   })
-   let transcriptDetails={
-    QuesTitle : pgTitle,
-    QuesTxt : quesTxt,
-    ScrType : "QuestionChecklist"
-  }
-    const getOptionDetails = filetredItems[0].options;
     useEffect(()=>{
+      const Details = Object.values(pages);
+   
+      const filetredItems = Details.filter(x=>{
+        return  x.PgId == id
+     })
+     let transcriptDetails={
+      QuesTitle : pgTitle,
+      QuesTxt : quesTxt,
+      QuesOption:[],
+      ScrType : "QuestionChecklist"
+    }
+  
+     setoptionsData(filetredItems[0].options)
+     setQuesData(filetredItems[0])
       setPgTitle(filetredItems[0].PgTitle)
       setquesTxt(filetredItems[0].quesTxt);
+      setMaxscore(filetredItems[0].MaxScore)
+      setmenuArray([...menuArray,filetredItems[0].PgTitle])
       setNextDisabled(true);
       setDisabled(false);
+      if(isPrev){
+        setDisabled(true);
+        setShwFdk(true)
+        setCFdk(cfdk)
+        setNextDisabled(false)
+     }
+     setglobalTRanscript([...globalTRanscript,transcriptDetails]) 
     },[])
-  //  console.log("GetOptionDetails",getOptionDetails)
-    const {OptId1,OptId2,OptId3,OptId4,OptId5,NoOfOptions,ScoreOp1,ScoreOp2,ScoreOp3,crtOptions,Fdk1,Fdk2,Fdk3}= getOptionDetails;
-    useEffect(()=>{
-     setglobalTRanscript([...globalTRanscript,transcriptDetails])
-       },[pgTitle,quesTxt])
+ 
+   
+
+ // const {OptId1,OptId2,OptId3,OptId4,OptId5,NoOfOptions,ScoreOp1,ScoreOp2,ScoreOp3,crtOptions,Fdk1,Fdk2,Fdk3}= getOptionDetails;
+
     const getScoreandFeedback=(crtCount)=>{
       debugger;
+      console.log("QuesData",QuesData)
         if(crtCount == crtOptions.length){
-          setScore(ScoreOp3);
-          setFdk(Fdk3)
+          
+          setScore(QuesData.Score[0]);
+          setCFdk(QuesData.Feedbacks[0])
         }
       else if(crtCount == 2){
-          setScore(ScoreOp2);
-          setFdk(Fdk2)
+        setScore(QuesData.Score[1]);
+        setCFdk(QuesData.Feedbacks[1])
         }
       else{
-          setScore(ScoreOp1);
-          setFdk(Fdk1)
+        setScore(QuesData.Score[2]);
+        setCFdk(QuesData.Feedbacks[2])
         }
     }
   
@@ -62,72 +80,69 @@ export default function QuestionChecklist() {
         let  QuesDetails = {
                 OptionanswerArray: answers,
                 OptionScore: score,
-                Optionfeedback: fdk,
+                Optionfeedback: cfdk,
                 QuesTitle:pgTitle ,
+                QuesOptions: optionsData,
+                OptionMaxScore: maxscore,                
                 QuesText: quesTxt
          }
-      
+       
+         setglobalTRanscript((prevItems) =>
+          prevItems.map((item) => {
+            if (item.ScrType === "QuestionChecklist") {
+              return {
+                ...item, 
+                QuesOption: [...(item.QuesOption || []), ...answers], 
+              };
+            }
+            return item; 
+          })
+        );
           setShwFdk(!shwFdk);
           setchkActive(true);
           setDisabled(true);
           setNextDisabled(false);
+        
           setglobalQuestionDetails([...globalQuestionDetails,QuesDetails])
+         
     }
     const handlechkList=(OptId,e)=>{
      debugger;
       const getSlectedId= e.target.id;
       const getspanSelected = getSlectedId+"_span";
-      setOptions(filetredItems[0].options.crtOptions)
+      //setOptions(filetredItems[0].options.crtOptions)
+      setCrtOptions(QuesData.crtOptions);
     //  console.log("spanid",getspanSelected)
       
       setanswers([...answers,OptId]);  
-     
-      if(options.indexOf(OptId)) {
+   
+      if(crtOptions.indexOf(OptId)) {
         setcrtCount(crtCount => crtCount + 1)
       } 
       getScoreandFeedback(crtCount);
       setchkActive(false);
-     
-      setPgTitle(filetredItems[0].PgTitle);
-     // setspanId(getspanSelected)
-      setquesTxt(document.getElementById("questionTxt").innerText);
-     // console.log("Count",Count)
+ 
   
     }
     return (
       <div>
-          <h2 style={{textAlign:"left",paddingLeft:"10px"}}>{filetredItems[0].PgTitle}</h2>
+          <h2 style={{textAlign:"left",paddingLeft:"10px"}}>{pgTitle}</h2>
           <div className='ques-Content'>
               <div className='questionTxt' id='questionTxt'>
-              {filetredItems[0].quesTxt}
+              {quesTxt}
                   <p><em>Select the applicable option from the choices below and click <strong>Submit.</strong></em></p>
               </div>           
-                 <form onSubmit={handleSubmit} style={{"width":"60%"}}>
-                   <div className='option-group'>
-                     <input type="checkbox" id={OptId1} name="chkQ2"  disabled={isDisabled} onChange={(e)=>handlechkList(OptId1,e)}/>
-                     <span id={OptId1 + "_span"} >Option 1</span><br/>
-                   
-                     <input type="checkbox" id={OptId2} name="chkQ2" disabled={isDisabled} onChange={(e)=>handlechkList(OptId2,e)}/>
-                     <span  id={OptId2+ "_span"}>Option 2</span><br/>
-                    
-                     <input type="checkbox" id={OptId3}  name="chkQ2"  disabled={isDisabled} onChange={(e)=>handlechkList(OptId3,e)}/>
-                     <span id={OptId3+ "_span"} >Option 3</span><br/>
-
-                     <input type="checkbox" id={OptId4}  name="chkQ2" disabled={isDisabled} onChange={(e)=>handlechkList(OptId4,e)}/>
-                     <span id={OptId3+ "_span"} >Option 4</span><br/>  
-                    
-                     <input type="checkbox" id={OptId5}  name="chkQ2" disabled={isDisabled} onChange={(e)=>handlechkList(OptId5,e)}/>
-                     <span id={OptId3+ "_span"} >Option 5</span><br/>
-                     </div>
-                    
-  
-                     <button className='btnSubmit' id="btnSubmitP" disabled={ischkActive}>Submit</button>
-                 </form>
+                  {
+                     <form onSubmit={handleSubmit} style={{"width":"60%"}}>
+                    <QuestionChecklistform answers={answers} optionData={optionsData} isDisabled={isDisabled}  handlechkList={handlechkList}/>
+                    <button className='btnSubmit' id="btnSubmitP" disabled={ischkActive}>Submit</button>
+                    </form>
+                 }
                  {
                   <>
                    <div className={`feedback ${shwFdk ? 'active': 'hidden'}`}>
                      
-                            <p>{fdk}</p>
+                            <p>{cfdk}</p>
                             <p><em>Click <strong>Next</strong> to continue.</em></p>
                       </div>
                      

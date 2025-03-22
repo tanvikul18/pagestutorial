@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { _gStartPageId } from '../Data/PagesData';
 
 export default function Screen() {
-    let {pages,setPages,QuesDetails,globalQuestionDetails,isNextDisabled,setNextDisabled,globalTRanscript,setglobalTRanscript} = useUserContext();
+    let {pages,setPages,QuesDetails,globalQuestionDetails,isNextDisabled,setNextDisabled,globalTRanscript,setglobalTRanscript,menuArray,setmenuArray} = useUserContext();
     const[scrTxt,setscrTxt]=useState(null);
     const[scrTitle,setscrTitle]=useState(null);
     const[scrType,setscrType]=useState(null);
@@ -16,11 +16,12 @@ export default function Screen() {
         }
        let transcriptDetails={
           ScrTitle : scrTitle,
+          Id:id,
           ScrTxt : scrTxt,
-          ScrType : scrType
+          ScrType : "Screen"
         }
        
-  console.log("globalTRanscript",globalTRanscript)
+
     useEffect(()=>{
       const filetredItems = Details.filter(x=>{
         return  x.PgId == id
@@ -28,7 +29,7 @@ export default function Screen() {
      setscrTxt(filetredItems[0].scrTxt);
      setscrTitle(filetredItems[0].PgTitle)
      setscrType(filetredItems[0].PgType)
-  
+     setmenuArray([...menuArray,filetredItems[0].PgTitle])
     },[])
     useEffect(()=>{
         setglobalTRanscript([...globalQuestionDetails,transcriptDetails])

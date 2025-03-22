@@ -8,14 +8,14 @@ export default function () {
   return (
      <div className='wrapper'>
             <div className='headerStyle'> 
-              <Header><Outlet/></Header>
+              <Header></Header>
             </div>
             <div>
-                <Main><Outlet/></Main>
+               <Outlet/>
            
              </div>
             <div>
-              <Footer><Outlet/></Footer>
+              <Footer></Footer>
             </div>
           </div>
   )

@@ -14,36 +14,39 @@ import { useUserContext } from '../Context/ContextApi'
 import { useParams } from 'react-router-dom'
 import Transcript from '../Pages/Transcript'
 import { _gStartPageId } from '../Data/PagesData';
+
 export default function Header(props) {
     let {id}=useParams();
     const VAluesLength= Object.keys(NavData);
-    const[isMenuOpen , setMenuOpen]=useState(false);
+  
     const[isAbtOpen , setAbtOpen]=useState(false);
     const[isTrOpen , setTrOpen]=useState(false);
-    const [percent, setPercent] = useState(0);
+   // const [percent, setPercent] = useState(0);
     const[isAudioPlaying,setAudioPlaying]=useState(false)
     const[imgSrc,setImgSrc]=useState(Audiologo);
-
-    if(id == undefined || id == ''){
-          id=_gStartPageId;
-        }
+      
+        let{progress,setProgress,pageVisited,setpageVisited,}=useUserContext();
+   
         const List = Object.values(NavData);
         //  console.log("List",List)
-      const filteredItems = List.filter(x =>{ 
-           // console.log(x.PgId)
-            return x.PgId == id});
-            const [audio,setaudioSrc]=useState(new Audio(filteredItems[0].audioSrc))
-    const getProgress = (Id) => {
-        debugger;
-       
-        let prog = (Id / VAluesLength.length) * 100; // ✅ Parse `Id` properly
-       // console.log("Prog",prog)
-        setPercent(prog); // ✅ Let React handle state updates
-       
-    };
-
+        const filteredItems = List.filter(x =>{           
+            return x.PgId == id}
+        );
+        const [audio,setaudioSrc]=useState(new Audio(filteredItems[0]?.audioSrc))
+        const getProgress = (pageVisited) => {
+            debugger;
+            console.log("FirstPage",pageVisited)
+            let prog = (pageVisited.length / VAluesLength.length) * 100; 
+        
+            setProgress(prog.toFixed(0)) 
+        };
+    useEffect(()=>{
+        
+            setpageVisited([...pageVisited,1])
+    },[])
     useEffect(() => {
-        getProgress(parseInt(id)) // ✅ Ensure `id` exists before calling function
+     
+        getProgress(pageVisited) 
     }, [id]);
     //console.log("progress",percent)
     const handleMenuClick=()=>{
@@ -51,11 +54,18 @@ export default function Header(props) {
     }
     const handleAbtSimulation=()=>{              
         setAbtOpen(!isAbtOpen);
+        setMenuOpen(false)
+        setTrOpen(false)
     }
     const handleTranscript=()=>{              
         setTrOpen(!isTrOpen);
+        setAbtOpen(false)
+        setMenuOpen(false)
    }
    const handleAudioEnd = ()=>{
+    setAbtOpen(false)
+    setMenuOpen(false)
+    setTrOpen(false)
           setAudioPlaying(false)
             setImgSrc(Replaylogo)
            
@@ -97,22 +107,22 @@ export default function Header(props) {
                 isMenuOpen ? <Menu/> : null
             }
             </div>
-            <div className='progressdiv'><progress id="progress" max={100} value={percent} ></progress><span id='percentText'>Progress: {percent}%</span></div>
+            <div className='progressdiv'><progress id="progress" max={100} value={progress} ></progress><span id='percentText'>Progress: {progress}%</span></div>
             <div className='actionButtons'>
                 <div className='simcontainer'>
-                <button className='btnAbt' onClick={handleAbtSimulation}><img src={Infologo} alt="About This simulation"/></button>
+                <button className='btnAbt' onClick={handleAbtSimulation} title='About This Simualtion'><img src={Infologo} alt="About This simulation"/></button>
                 {
                     isAbtOpen ? <AboutSim isAbtOpen={isAbtOpen} setAbtOpen={setAbtOpen}/> : null
                 }
                 </div>
                 <div className='trncontainer'>
-                <button className='btnTr'  onClick={handleTranscript}><img src={Trlogo} alt="Trancsript"/></button>
+                <button className='btnTr' title='Transcript'  onClick={handleTranscript}><img src={Trlogo} alt="Trancsript"/></button>
                 {
                     isTrOpen ? <Transcript isTrOpen={isTrOpen} setTrOpen={setTrOpen}/> : null
                 }
                 </div>
                 <div className='aucontainer'>
-                <button className='btnAu' onClick={handleAudio}><img src={imgSrc} alt="Audio"/></button>
+                <button className='btnAu' title='Audio'  onClick={handleAudio}><img src={imgSrc} alt="Audio"/></button>
                 </div>
             </div>
         </div> 

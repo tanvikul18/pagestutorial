@@ -12,9 +12,24 @@ export const UserContextProvider = ({ children }) => {
     const[isDisabled,setDisabled]= useState(false);
     const[globalQuestionDetails,setglobalQuestionDetails]=useState([]);
     const[globalTRanscript,setglobalTRanscript]=useState([])
-    const[MenuDisabled,setmenuDisabled]=useState({})
+  
+    const[isChecked,setChecked]=useState(false);
+
+    const[rfdk,setRFdk]=useState(null);
+    const[cfdk,setCFdk]=useState(null);
+    const[clfdk,setClFdk]=useState(null);
+  
+    const[progress,setProgress]=useState(0);
+    const[pageVisited,setpageVisited]=useState([]);
+    const [isPrev,setisPrev]=useState(false);
+    const[num,setNum]=useState(0);
+    const[Value,setValue]=useState("--Select--");
+    const[option,setOption]=useState(null);//radiobtnoption selected
+    const[answers,setanswers]=useState([]);//userselected checkboxes
+    const[menuArray,setmenuArray]=useState([]);//for menu
+    const[isMenuOpen , setMenuOpen]=useState(false); //for hide show menu
    
-    const value = {       
+    const value = {            
         pages,
         setPages,        
         globalQuestionDetails,
@@ -24,7 +39,10 @@ export const UserContextProvider = ({ children }) => {
         globalTRanscript,
         setglobalTRanscript,
         isDisabled,
-        setDisabled,MenuDisabled,setmenuDisabled
+        progress,setProgress,option,setOption,answers,setanswers,
+        pageVisited,setpageVisited,clfdk,setClFdk,
+        isPrev,setisPrev,rfdk,setRFdk,cfdk,setCFdk,num,setNum,Value,setValue,
+        setDisabled,isChecked,setChecked,menuArray,setmenuArray
     };
    // console.log(value.percent)
 
